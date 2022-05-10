@@ -17,8 +17,8 @@ module "eks" {
   cluster_version = "1.21"
   #cluster_iam_role_arn = var.cluster_iam_role_arn
   cluster_iam_role_name = var.cluster_iam_role_name
-  vpc_id          = "vpc-cff46ea5" #module.vpc.vpc_id
-  subnets         = ["subnet-6cbaf806" , "subnet-3b2d9447" ] #module.vpc.public_subnets
+  vpc_id          = "vpc-XYZ" #module.vpc.vpc_id
+  subnets         = ["subnet-XYZ" , "subnet-XYZ" ] #module.vpc.public_subnets
   #fargate_subnets = [module.vpc.private_subnets[2]]
 
   cluster_endpoint_private_access = "false"
@@ -30,8 +30,8 @@ module "eks" {
 
   #map_users = [
   #  {
-  #    user_arn = "arn:aws:iam::977292407108:user/amaad"
-  #    username = "amaad"
+  #    user_arn = "arn:aws:iam::XYZZZ:user/abc"
+  #    username = "abc"
   #    group    = "system:masters"
   #  },
   #]
@@ -58,7 +58,7 @@ resource "aws_iam_openid_connect_provider" "default" {
     "sts.amazonaws.com",
   ]
 
-  thumbprint_list = [ "9e99a48a9960b14926bb7f3b02e22da2b0ab7280" ]
+  thumbprint_list = [ "xxxxxxxxxx22da2b0ab7280" ]
 }
 
 ## Creating IAM Role for Node Group (Only to Be Created for a Complete New Environment)
@@ -99,8 +99,8 @@ resource "aws_iam_openid_connect_provider" "default" {
 #resource "aws_eks_node_group" "MainNode" {
 #  cluster_name    = var.cluster_name
 #  node_group_name = "MainNode-32Gb"
-#  node_role_arn   = var.node_role_arn #["arn:aws:iam::977292407108:role/crain-eks-node-role"]
-#  subnet_ids      = ["subnet-6cbaf806"]
+#  node_role_arn   = var.node_role_arn #["arn:aws:iam::xxxxxxxx:role/abc-role"]
+#  subnet_ids      = ["subnet-xxxxxxx"]
 
 #  scaling_config {
 #    desired_size = 0
@@ -131,7 +131,7 @@ module "main-node" {
   disk_size = 50
   node_group_name_prefix = "MainNode-32Gb"
   node_role_arn = var.node_role_arn
-  subnet_ids = ["subnet-6cbaf806" ]  ##["subnet-1","subnet-2","subnet-3"]
+  subnet_ids = ["subnet-xxxxxx" ]  ##["subnet-1","subnet-2","subnet-3"]
 
   desired_size = 0
   min_size     = 0
@@ -140,10 +140,10 @@ module "main-node" {
   instance_types = ["t3.2xlarge"]
   capacity_type  = "ON_DEMAND"
 
-  #ec2_ssh_key = "crainkube"
+  #ec2_ssh_key = "key"
 
   labels = {
-    disktype = "ssd"
+    disktype = "main_node"
   }
 
   force_update_version = false
@@ -164,27 +164,27 @@ module "model-node" {
 
   cluster_name = var.cluster_name
   disk_size = 30
-  node_group_name_prefix = "Model-Calulation"
+  node_group_name_prefix = "Model"
   node_role_arn = var.node_role_arn
-  subnet_ids = ["subnet-6cbaf806" ]  ##["subnet-1","subnet-2","subnet-3"]
+  subnet_ids = ["subnet-xxxxxxx" ]  ##["subnet-1","subnet-2","subnet-3"]
 
   desired_size = 0
   min_size     = 0
   max_size     = 10
 
-  instance_types = ["m5.4xlarge"]
+  instance_types = ["t3.xlarge"]
   capacity_type  = "ON_DEMAND"
 
-  #ec2_ssh_key = "crainkube"
+  #ec2_ssh_key = "key"
 
   labels = {
-    superman = "calculation"
+    superman = "primary"
   }
   
   force_update_version = false
 
   tags = {
-    Name = "Model-Calculation"
+    Name = "Model"
   }
   depends_on = [
     module.eks
