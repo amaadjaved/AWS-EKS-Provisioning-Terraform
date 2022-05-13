@@ -1,6 +1,6 @@
 variable "credentials" {
   type = object({
-    access_key = "KHYJGTHNBVHEBR"
+    access_key = "KHYJGTHNBVHXYZ"
     secret_key = "Kuxlkjhlkjhlkjh;a;sdkd;shwhZGs31o"
   })
 }
